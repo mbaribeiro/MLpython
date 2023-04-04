@@ -1,5 +1,6 @@
 import data as dt
 import numpy as np
+import Interpolate as ip
 
 # Read data from file
 data = dt.data("export.csv");
@@ -32,7 +33,26 @@ ax.set_xlabel('X [m]')
 ax.set_ylabel('Y [m]')
 ax.set_zlabel('Z [m]')
 plt.colorbar(surf)
-plt.show()
+plt.show() 
+
+# Interpolate the data with scipy
+dataValueT, dataValueV = ip.interpolate(data, -1.00000000e+00, -4.30431031e-02, -9.78421513e-03)
+
+# print the interpolated values
+print(dataValueT)
+print(dataValueV)
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
