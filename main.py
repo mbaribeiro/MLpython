@@ -33,7 +33,7 @@ ax.set_xlabel('X [m]')
 ax.set_ylabel('Y [m]')
 ax.set_zlabel('Z [m]')
 plt.colorbar(surf)
-plt.show() 
+#plt.show() 
 
 # Interpolate the data with scipy
 dataValueT, dataValueV = ip.interpolate(data, -1.00000000e+00, -4.30431031e-02, -9.78421513e-03)
@@ -42,8 +42,13 @@ dataValueT, dataValueV = ip.interpolate(data, -1.00000000e+00, -4.30431031e-02, 
 print(dataValueT)
 print(dataValueV)
 
+import check_cube as ckc
+import mediaTempVel as mtv
 
-
+sala = [1000,200,200]
+n_cubes = 40000
+result = mtv.media_temp_velocidade(sala,n_cubes,data)
+print(result)
 
 
 
