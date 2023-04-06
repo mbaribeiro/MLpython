@@ -1,3 +1,4 @@
+#Open the file and read the data
 def data(filename):
     global const
     with open(filename) as f:

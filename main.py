@@ -1,74 +1,56 @@
-import data as dt
+import pandas as pd
+import matplotlib.pyplot as plt
 import numpy as np
-import Interpolate as ip
+from Scripts import mediaTempVel as mtv
+from Scripts import data as dt
 
 # Read data from file
-data = dt.data("export.csv");
+data = dt.data("export.csv")
 
 # Reorganize data
 data = np.array(data)
 
-# Plote a 3d data and utilize the 4° as color, using matplotlib and axes3d
-import matplotlib.pyplot as plt
-from mpl_toolkits.mplot3d import Axes3D
-
 # Change the value of 4° column to Celsius
-data[:,3] = data[:,3] - 273.15
+data[:, 3] = data[:, 3] - 273.15
+
+# Convert the three first columns to mm
+data[:, 0:3] *= 1000
+
+# Define the room dimensions
+sala = [0, -1000, -200, 200, -200, 200]
+
+# Define the number of cubes
+n_cubes = 8000
 
 # Plot the data
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-surf = ax.scatter(data[:,0], data[:,1], data[:,2], c=data[:,3], cmap=plt.jet())
-ax.set_title('Temperature [K]')
-ax.set_xlabel('X [m]')
-ax.set_ylabel('Y [m]')
-ax.set_zlabel('Z [m]')
-plt.colorbar(surf)
+plt.show()
 
-fig = plt.figure()
-ax = fig.add_subplot(111, projection='3d')
-surf = ax.scatter(data[:,0], data[:,1], data[:,2], c=data[:,4], cmap=plt.jet())
-ax.set_title('Velocity [m/s]')
-ax.set_xlabel('X [m]')
-ax.set_ylabel('Y [m]')
-ax.set_zlabel('Z [m]')
-plt.colorbar(surf)
-#plt.show() 
+# Media Temp Velocity
+result = mtv.media_temp_vel(sala, n_cubes, data)
 
-# Interpolate the data with scipy
-dataValueT, dataValueV = ip.interpolate(data, -1.00000000e+00, -4.30431031e-02, -9.78421513e-03)
+# Creates a list to store the values of i, j, k, temp, vel and count
+values = []
 
-# print the interpolated values
-print(dataValueT)
-print(dataValueV)
+# Loop by the keys of i
+for i in result.keys():
+    # Loop by the keys of j
+    for j in result[i].keys():
+        # Loop by the keys of k
+        for k in result[i][j].keys():
+            # Add the values to the list
+            values.append([i, j, k, result[i][j][k]['temp'],
+                          result[i][j][k]['vel'], result[i][j][k]['count']])
 
-import check_cube as ckc
-import mediaTempVel as mtv
+# Criates a DataFrame with the values
+df = pd.DataFrame(values, columns=['i', 'j', 'k', 'temp', 'vel', 'count'])
 
-sala = [1000,200,200]
-n_cubes = 40000
-result = mtv.media_temp_velocidade(sala,n_cubes,data)
-print(result)
+# Convert the values of i, j and k to int, if necessary
+df['i'] = df['i'].astype(int)
+df['j'] = df['j'].astype(int)
+df['k'] = df['k'].astype(int)
 
+# Print the DataFrame
+print(df)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Save the DataFrame to a file
+df.to_csv('output.txt', sep='\t', index=False)
