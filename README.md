@@ -1,9 +1,9 @@
 <h1 align="center">CFD & Neural Networks</h1>
 
-# Introduction
+# 💡 Introduction
 
 <h4 align="center"> 
-	🚧 🚀 Em construção...  🚧
+	🚧 Em construção...  🚧
 </h4>
 
 <p align="center">This repository contains two Python scripts, main.py and data_plot.py, which read and manipulate data from a CSV file and generate visualizations.</p>
@@ -11,15 +11,16 @@
 # Table of Contents
 
 <!--ts-->
-   * [Introduction](#Introduction)
-   * [Features](#tabela-de-conteudo)
-   * [Dependences](#dependencies)
-   * [How to start](#How-to-start)
+   * [Introduction](#💡-Introduction)
+   * [Table of Contents](#📌-table-of-contents)
+   * [Features](#🛠️-features)
+   * [Dependences](#📦-dependencies)
+   * [How to start](#🚀-How-to-start)
    * [Technologies](#🛠-technologies)
    * [Author](#Author)
 <!--te-->
 
-# Features
+# 🛠️ Features
 
 - [x] Importation of the data
 - [x] Divide the principal geometry in cubes
@@ -27,14 +28,14 @@
 - [ ] Implantation in a neural networks
 - [ ] ...
 
-# Dependencies
+# 📦 Dependencies
 
 Before starting, you must have this features in your pc:
 [Git](https://git-scm.com), 
 [python.js](https://www.python.org/) , 
 [VSCode](https://code.visualstudio.com/).
 
-# How to start
+# 🚀 How to start
 
 ```bash
 # Clone the repository
