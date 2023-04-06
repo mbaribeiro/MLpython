@@ -57,12 +57,13 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 # Author
 
-<p alighn="center" href="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8">
- <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
- <br /> </p>
-<p>Desenvolvido por Marlon Ribeiro<span style="font-size: larger;"></p>
+<p style="text-align: center;">
+  <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
+  <br />
+  Desenvolvido por Marlon Ribeiro
+</p>
 
-<p align="center">Tentando ligar o mundo da engenharia a ciencia da computação 👋🏽 Entre em contato!</p>
+<p align="center">Trying to bring together the world of engineering and the world of computer science. 👋🏽 Entre em contato!</p>
 
 [![Twitter Badge](https://img.shields.io/badge/Marlon_Ribeiro-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/i_am_marlou) [![Linkedin Badge](https://img.shields.io/badge/Marlon_Ribeiro-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/marlon-ribeiro-marlon/) 
 [![Outlook Badge](https://img.shields.io/badge/marlonbrenoribeiro@outlook.com-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white)](mailto:marlonbrenoribeiro@outlook.com)
