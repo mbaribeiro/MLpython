@@ -60,7 +60,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 <p alighn="center" href="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8">
  <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
  <br />
- <sub><b>Marlon Ribeiro</b></sub></p>
+<p>Desenvolvido por <span style="font-size: larger;"><sub><b>Marlon Ribeiro</b></sub></span></p>
 
 <p align="center">Tentando ligar o mundo da engenharia a ciencia da computação 👋🏽 Entre em contato!</p>
 
