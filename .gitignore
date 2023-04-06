@@ -152,5 +152,6 @@ cython_debug/
 #.idea/
 
 design
+include
 demo1
 simulations
