@@ -1,28 +1,22 @@
 <h1 align="center">CFD & Neural Networks</h1>
 
-Introduction
+# Introduction
+
+<h4 align="center"> 
+	🚧 🚀 Em construção...  🚧
+</h4>
 
 <p align="center">This repository contains two Python scripts, main.py and data_plot.py, which read and manipulate data from a CSV file and generate visualizations.</p>
 
 Tabela de conteúdos
 =================
 <!--ts-->
-   * [Introduction](#Sobre)
-   * [Tabela de Conteudo](#tabela-de-conteudo)
-   * [Instalação](#instalacao)
-   * [Como usar](#como-usar)
-      * [Pre Requisitos](#pre-requisitos)
-      * [Local files](#local-files)
-      * [Remote files](#remote-files)
-      * [Multiple files](#multiple-files)
-      * [Combo](#combo)
-   * [Tests](#testes)
-   * [Tecnologias](#tecnologias)
+   * [Introduction](#Introduction)
+   * [Features](#tabela-de-conteudo)
+   * [Dependences](#dependencies)
+   * [How to start](#How-to-start)
+   * [Technologies](#🛠-technologies)
 <!--te-->
-
-<h4 align="center"> 
-	🚧 🚀 Em construção...  🚧
-</h4>
 
 ## Features
 
@@ -32,12 +26,14 @@ Tabela de conteúdos
 - [ ] Implantation in a neural networks
 - [ ] ...
 
-### Dependencies
+## Dependencies
 
-Before start, you must have this features in your pc:
+Before starting, you must have this features in your pc:
 [Git](https://git-scm.com), 
 [python.js](https://www.python.org/) , 
 [VSCode](https://code.visualstudio.com/).
+
+## How to start
 
 ```bash
 # Clone the repository
@@ -51,7 +47,7 @@ C:  py get-pip.py #Windows
 $ pip install -r requeriments.txt
 ```
 
-### 🛠 Tecnologias
+### 🛠 Technologies
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
