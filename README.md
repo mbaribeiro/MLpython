@@ -1,7 +1,6 @@
 <h1 align="center">CFD & Neural Networks</h1>
 
 # Introduction
----
 
 <h4 align="center"> 
 	🚧 🚀 Em construção...  🚧
@@ -10,7 +9,7 @@
 <p align="center">This repository contains two Python scripts, main.py and data_plot.py, which read and manipulate data from a CSV file and generate visualizations.</p>
 
 # Table of Contents
-=================
+
 <!--ts-->
    * [Introduction](#Introduction)
    * [Features](#tabela-de-conteudo)
@@ -58,9 +57,9 @@ As seguintes ferramentas foram usadas na construção do projeto:
 # Author
 
 <p style="text-align: center;">
-  <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
+  <img style="border-radius: 50%; display: block; margin: 0 auto;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
   <br />
-  <span style="display: block; text-align: center;">Developed by Marlon Ribeiro</span>
+  Developed by Marlon Ribeiro
 </p>
 
 <p align="center">Trying to bring together the world of engineering ⚙️ and the world of computer science 🖥️. Get in touch 👋🏽!</p>
