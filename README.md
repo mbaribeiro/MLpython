@@ -8,7 +8,7 @@
 
 <p align="center">This repository contains two Python scripts, main.py and data_plot.py, which read and manipulate data from a CSV file and generate visualizations.</p>
 
-# Table of Contents
+# 📌 Table of Contents
 
 <!--ts-->
    * [Introduction](#💡-Introduction)
@@ -17,7 +17,7 @@
    * [Dependences](#📦-dependencies)
    * [How to start](#🚀-How-to-start)
    * [Technologies](#🛠-technologies)
-   * [Author](#Author)
+   * [Author](#🖋️-Author)
 <!--te-->
 
 # 🛠️ Features
@@ -55,7 +55,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 - [python.js](https://www.python.org/)
 
-# Author
+# 🖋️ Author
 
 <p style="text-align: center;">
   <img style="border-radius: 50%; display: block; margin: 0 auto;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
