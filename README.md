@@ -8,7 +8,7 @@
 
 <p align="center">This repository contains two Python scripts, main.py and data_plot.py, which read and manipulate data from a CSV file and generate visualizations.</p>
 
-Tabela de conteúdos
+# Table of Contents
 =================
 <!--ts-->
    * [Introduction](#Introduction)
@@ -18,7 +18,7 @@ Tabela de conteúdos
    * [Technologies](#🛠-technologies)
 <!--te-->
 
-## Features
+# Features
 
 - [x] Importation of the data
 - [x] Divide the principal geometry in cubes
@@ -26,14 +26,14 @@ Tabela de conteúdos
 - [ ] Implantation in a neural networks
 - [ ] ...
 
-## Dependencies
+# Dependencies
 
 Before starting, you must have this features in your pc:
 [Git](https://git-scm.com), 
 [python.js](https://www.python.org/) , 
 [VSCode](https://code.visualstudio.com/).
 
-## How to start
+# How to start
 
 ```bash
 # Clone the repository
@@ -47,7 +47,7 @@ C:  py get-pip.py #Windows
 $ pip install -r requeriments.txt
 ```
 
-### 🛠 Technologies
+# 🛠 Technologies
 
 As seguintes ferramentas foram usadas na construção do projeto:
 
