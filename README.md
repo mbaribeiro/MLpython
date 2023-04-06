@@ -58,7 +58,7 @@ As seguintes ferramentas foram usadas na construção do projeto:
 # Author
 
 <a alighn="center" href="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8">
- <img style="border-radius: 50%;" src="https://avatars3.githubusercontent.com/u/380327?s=460&u=61b426b901b8fe02e12019b1fdb67bf0072d4f00&v=4" width="100px;" alt=""/>
+ <img style="border-radius: 50%;" src="https://media.licdn.com/dms/image/D4D03AQFRloQwOZh8xw/profile-displayphoto-shrink_800_800/0/1668826333488?e=1686182400&v=beta&t=CDNRO_Jz_7G6fKEQu_dzYqhu8b0NxnkUrAxDcED9zE8" width="100px;" alt=""/>
  <br />
  <sub><b>Marlon Ribeiro</b></sub></a>
 
