@@ -64,5 +64,5 @@ As seguintes ferramentas foram usadas na construção do projeto:
 
 <p align="center">Tentando ligar o mundo da engenharia a ciencia da computação 👋🏽 Entre em contato!</p>
 
-[![Twitter Badge](https://img.shields.io/badge/-@i_am_marlou-1ca0f1?style=flat-square&labelColor=1ca0f1&logo=twitter&logoColor=white&link=https://twitter.com/i_am_marlou)](https://twitter.com/i_am_marlou) [![Linkedin Badge](https://img.shields.io/badge/-Marlon-Ribeiro-blue?style=flat-square&logo=Linkedin&logoColor=white&link=https://www.linkedin.com/in/marlon-ribeiro-marlon/)](https://www.linkedin.com/in/marlon-ribeiro-marlon/) 
+[![Twitter Badge](https://img.shields.io/badge/Marlon-Ribeiro-1DA1F2?style=for-the-badge&logo=twitter&logoColor=white)](https://twitter.com/i_am_marlou) [![Linkedin Badge](https://img.shields.io/badge/Marlon-Ribeiro-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/marlon-ribeiro-marlon/) 
 [![Outlook Badge](https://img.shields.io/badge/marlonbrenoribeiro@outlook.com-0078D4?style=for-the-badge&logo=microsoft-outlook&logoColor=white)](mailto:marlonbrenoribeiro@outlook.com)
