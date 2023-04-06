@@ -152,5 +152,8 @@ cython_debug/
 #.idea/
 
 design
-demo1
+include
+Scripts
+share
+pyenv.cfg
 simulations
