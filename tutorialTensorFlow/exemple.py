@@ -53,7 +53,6 @@ model = models.Model(inputs=inputs, outputs=outputs, name="DeepNN")
 Extract info for each layer in a keras model.
 '''
 
-
 def utils_nn_config(model):
     lst_layers = []
     if "Sequential" in str(model):  # -> Sequential doesn't show the input layer
@@ -212,7 +211,6 @@ y = np.random.choice([1, 0], size=1000)
 # train/validation
 training = model.fit(x=X, y=y, batch_size=32, epochs=100,
                      shuffle=True, verbose=0, validation_split=0.3)
-print(training)
 
 # plot
 metrics = [k for k in training.history.keys() if ("loss" not in k)
