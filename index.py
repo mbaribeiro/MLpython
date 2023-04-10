@@ -7,12 +7,12 @@ from sklearn.metrics import r2_score
 
 # Create the model
 modelTemp = keras.Sequential([
-    keras.layers.Dense(32, input_shape=(3,), activation='relu'),
+    keras.layers.Dense(16, input_shape=(3,), activation='elu'),
     keras.layers.Dense(7252, activation='linear')
 ])
 
 modelVel = keras.Sequential([
-    keras.layers.Dense(32, input_shape=(3,), activation='relu'),
+    keras.layers.Dense(64, input_shape=(3,), activation='sigmoid'),
     keras.layers.Dense(7252, activation='linear')
 ])
 
@@ -95,9 +95,11 @@ for i in range(len(predicted_inputs)):
 
     output_list = df.iloc[:, 3].values.tolist()
 
-    nonzero_indices = [i for i in range(len(output_list)) if output_list[i] != 0]
+    nonzero_indices = [i for i in range(
+        len(output_list)) if output_list[i] != 0]
     output_list_filt = [output_list[i] for i in nonzero_indices]
-    predicted_outputsTemp_filt = [predicted_outputsTemp[i][j] for j in nonzero_indices]
+    predicted_outputsTemp_filt = [
+        predicted_outputsTemp[i][j] for j in nonzero_indices]
 
     m, b = np.polyfit(output_list_filt, predicted_outputsTemp_filt, 1)
     x = np.array(output_list_filt)
@@ -105,7 +107,8 @@ for i in range(len(predicted_inputs)):
     ax1.plot(x, m*x + b, color='red')
 
     result = r2_score(output_list, predicted_outputsTemp[i])
-    ax1.text(0.1, 0.9, "r-squared = {:.3f}".format(result), transform=ax1.transAxes)
+    ax1.text(
+        0.1, 0.9, "r-squared = {:.3f}".format(result), transform=ax1.transAxes)
 
     print("R² (Temperature) = " + str(result))
     ax1.set_title('Temperature [K]')
@@ -115,17 +118,20 @@ for i in range(len(predicted_inputs)):
     # Velocity
     output_list = df.iloc[:, 4].values.tolist()
 
-    nonzero_indices = [i for i in range(len(output_list)) if output_list[i] != 0]
+    nonzero_indices = [i for i in range(
+        len(output_list)) if output_list[i] != 0]
     output_list_filt = [output_list[i] for i in nonzero_indices]
-    predicted_outputsVel_filt = [predicted_outputsVel[i][j] for j in nonzero_indices]
+    predicted_outputsVel_filt = [
+        predicted_outputsVel[i][j] for j in nonzero_indices]
 
     m, b = np.polyfit(output_list_filt, predicted_outputsVel_filt, 1)
     x = np.array(output_list_filt)
-    ax2.scatter(output_list_filt,predicted_outputsVel_filt)
+    ax2.scatter(output_list_filt, predicted_outputsVel_filt)
     ax2.plot(x, m*x + b, color='red')
 
     result = r2_score(output_list, predicted_outputsVel[i])
-    ax2.text(0.1, 0.9, "r-squared = {:.3f}".format(result), transform=ax2.transAxes)
+    ax2.text(
+        0.1, 0.9, "r-squared = {:.3f}".format(result), transform=ax2.transAxes)
 
     print("R² (Velocity) = " + str(result))
     ax2.set_title('Velocity [m s^-1]')
@@ -133,4 +139,3 @@ for i in range(len(predicted_inputs)):
     ax2.set_xlabel('Real [m s^-1]')
 
     plt.show()
-
