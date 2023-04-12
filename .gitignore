@@ -157,4 +157,9 @@ demo1
 simulations
 tutorialTensorFlow
 automation
-room
+room/inputs
+room/outputs
+room/predicteds
+room/results
+room/trainingOutputs
+room/trainingResults
