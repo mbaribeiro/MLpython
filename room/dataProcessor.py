@@ -9,7 +9,7 @@ from Scripts import data as dt
 sala = [-1500, 1500, 1500, -3000, -750, 2250]
 
 # Define the number of cubes
-n_cubes = 1000000
+n_cubes = 40500
 
 # Define the path to the results folder
 results_path = './room/results/'
@@ -25,7 +25,7 @@ for filename in os.listdir(results_path):
         data = data.values
 
         # Change the value of 4th column to Celsius
-        data[:, 3] = data[:, 3] #- 273.15
+        data[:, 3] = data[:, 3] - 273.15
 
         # Plot the data
         plt.show()
@@ -76,7 +76,7 @@ for filename in os.listdir(results_path):
         data = data.values
 
         # Change the value of 4th column to Celsius
-        data[:, 3] = data[:, 3] #- 273.15
+        data[:, 3] = data[:, 3] - 273.15
 
         # Plot the data
         plt.show()

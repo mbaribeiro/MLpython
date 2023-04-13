@@ -7,20 +7,23 @@ from sklearn.metrics import mean_squared_error
 
 # Create the model
 modelTemp = keras.Sequential([
-    keras.layers.Dense(64, input_shape=(2,), activation='relu'),
-    keras.layers.Dense(1024, activation='relu'),
-    keras.layers.Dense(1022208, activation='linear')
+    keras.layers.Dense(64, input_shape=(2,), activation='sigmoid', use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(1024, activation='sigmoid',use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(8192, activation='sigmoid',use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(40500, activation='linear')
 ])
 
 modelVel = keras.Sequential([
-    keras.layers.Dense(64, input_shape=(2,), activation='sigmoid'),
-    keras.layers.Dense(1024, activation='sigmoid'),
-    keras.layers.Dense(1022208, activation='linear')
+    keras.layers.Dense(64, input_shape=(2,), activation='relu', use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(1024, activation='relu'),
+    keras.layers.Dense(40500, activation='linear')
 ])
+
 
 class PrintEpochCallback(keras.callbacks.Callback):
     def on_epoch_end(self, epoch, logs=None):
         print(f"Epoch {epoch+1}/{self.params['epochs']}")
+
 
 # Compile the model
 modelTemp.compile(loss='mean_squared_error')
@@ -72,10 +75,12 @@ with open('./room/inputs/inputs.csv', 'r') as f:
     outputs2 = np.array(outputs2, dtype=float)
 
     # Train the modelTemp
-    modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32, verbose=0, callbacks=[epoch_callback])
+    modelTemp.fit(inputs, outputs1, epochs=500, batch_size=2,
+                  verbose=0, callbacks=[epoch_callback])
 
     # Train the modelVel
-    modelVel.fit(inputs, outputs2, epochs=500, batch_size=32, verbose=0, callbacks=[epoch_callback])
+    modelVel.fit(inputs, outputs2, epochs=500, batch_size=2,
+                 verbose=0, callbacks=[epoch_callback])
 
     # Test the model
     predicted_inputs = [[15, 1], [18, 5], [20, 3]]
@@ -123,8 +128,9 @@ for i in range(len(predicted_inputs)):
     ax1.set_ylabel('Predicted [K]')
     ax1.set_xlabel('Real [K]')
 
-    #calculate the mse
-    mse = keras.losses.mean_squared_error(output_list, predicted_outputsTemp[i])
+    # calculate the mse
+    mse = keras.losses.mean_squared_error(
+        output_list, predicted_outputsTemp[i])
     print("MSE (Temperature) = " + str(mse))
 
     # Velocity
@@ -150,9 +156,8 @@ for i in range(len(predicted_inputs)):
     ax2.set_ylabel('Predicted [m s^-1]')
     ax2.set_xlabel('Real [m s^-1]')
 
-    #calculate the mse
+    # calculate the mse
     mse = keras.losses.mean_squared_error(output_list, predicted_outputsVel[i])
     print("MSE (Velocity) = " + str(mse))
-
 
     plt.show()
