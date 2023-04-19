@@ -1,37 +1,56 @@
 import numpy as np
-import tensorflow as tf 
-from tensorflow import keras
+import tensorflow as tf
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
-from functools import partial
 
+optimizer1 = tf.keras.optimizers.Adam(learning_rate=0.005)
+optimizer2 = tf.keras.optimizers.Adam(learning_rate=0.001)
 
 # Create the model
-modelTemp = keras.Sequential([
-    keras.layers.Dense(64, input_shape=(2,), activation=partial(tf.nn.leaky_relu, alpha=0.01), use_bias=True, bias_initializer='zeros'),
-    keras.layers.Dense(1024, activation=partial(tf.nn.leaky_relu, alpha=0.01),use_bias=True, bias_initializer='zeros'),
-    keras.layers.Dense(8192, activation="relu",use_bias=True, bias_initializer='zeros'),
-    keras.layers.Dense(40500, activation='linear')
+modelTemp = tf.keras.Sequential([
+    tf.keras.layers.Dense(8, input_shape=(
+        2,), activation="relu", use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(64, activation="relu",
+                          use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(512, activation="relu",
+                          use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(4096, activation="relu",
+                          use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(40500, activation='linear')
 ])
 
-modelVel = keras.Sequential([
-    keras.layers.Dense(64, input_shape=(2,), activation='relu', use_bias=True, bias_initializer='zeros'),
-    keras.layers.Dense(1024, activation='relu'),
-    keras.layers.Dense(40500, activation='linear')
+modelVel = tf.keras.Sequential([
+    tf.keras.layers.Dense(64, input_shape=(
+        2,), activation='relu', use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(1024, activation='relu'),
+    tf.keras.layers.Dense(40500, activation='linear')
 ])
 
 
-class PrintEpochCallback(keras.callbacks.Callback):
+class PrintEpochCallback(tf.keras.callbacks.Callback):
+    def __init__(self, ax):
+        self.losses = []
+        self.ax = ax
+        self.ax.set_xlabel('Epoch')
+        self.ax.set_ylabel('Loss')
+
     def on_epoch_end(self, epoch, logs=None):
-        print(f"Epoch {epoch+1}/{self.params['epochs']}")
+        self.losses.append(logs['loss'])
+        self.ax.plot(self.losses)
+        self.ax.set_title(
+            f"Epoch {epoch+1}/{self.params['epochs']}, loss: {logs['loss']:.4f}")
+        plt.pause(0.01)
 
 
 # Compile the model
-modelTemp.compile(loss='mean_squared_error')
-modelVel.compile(loss='mean_squared_error')
+modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
+modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
 
-epoch_callback = PrintEpochCallback()
+fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
+
+epoch_callback_temp = PrintEpochCallback(axs[0])
+epoch_callback_vel = PrintEpochCallback(axs[1])
 
 # Load input data
 with open('./room/inputs/inputs.csv', 'r') as file:
@@ -77,12 +96,12 @@ with open('./room/inputs/inputs.csv', 'r') as f:
     outputs2 = np.array(outputs2, dtype=float)
 
     # Train the modelTemp
-    modelTemp.fit(inputs, outputs1, epochs=500, batch_size=2,
-                  verbose=0, callbacks=[epoch_callback])
+    modelTemp.fit(inputs, outputs1, epochs=200, batch_size=32,
+                  verbose=0, callbacks=[epoch_callback_temp])
 
     # Train the modelVel
-    modelVel.fit(inputs, outputs2, epochs=500, batch_size=2,
-                 verbose=0, callbacks=[epoch_callback])
+    modelVel.fit(inputs, outputs2, epochs=50, batch_size=32,
+                 verbose=0, callbacks=[epoch_callback_vel])
 
     # Test the model
     predicted_inputs = [[15, 1], [18, 5], [20, 3]]
@@ -131,7 +150,7 @@ for i in range(len(predicted_inputs)):
     ax1.set_xlabel('Real [K]')
 
     # calculate the mse
-    mse = keras.losses.mean_squared_error(
+    mse = tf.keras.losses.mean_squared_error(
         output_list, predicted_outputsTemp[i])
     print("MSE (Temperature) = " + str(mse))
 
@@ -159,7 +178,8 @@ for i in range(len(predicted_inputs)):
     ax2.set_xlabel('Real [m s^-1]')
 
     # calculate the mse
-    mse = keras.losses.mean_squared_error(output_list, predicted_outputsVel[i])
+    mse = tf.keras.losses.mean_squared_error(
+        output_list, predicted_outputsVel[i])
     print("MSE (Velocity) = " + str(mse))
 
     plt.show()
