@@ -1,15 +1,17 @@
 import numpy as np
+import tensorflow as tf 
 from tensorflow import keras
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
-from sklearn.metrics import mean_squared_error
+from functools import partial
+
 
 # Create the model
 modelTemp = keras.Sequential([
-    keras.layers.Dense(64, input_shape=(2,), activation='sigmoid', use_bias=True, bias_initializer='zeros'),
-    keras.layers.Dense(1024, activation='sigmoid',use_bias=True, bias_initializer='zeros'),
-    keras.layers.Dense(8192, activation='sigmoid',use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(64, input_shape=(2,), activation=partial(tf.nn.leaky_relu, alpha=0.01), use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(1024, activation=partial(tf.nn.leaky_relu, alpha=0.01),use_bias=True, bias_initializer='zeros'),
+    keras.layers.Dense(8192, activation="relu",use_bias=True, bias_initializer='zeros'),
     keras.layers.Dense(40500, activation='linear')
 ])
 
