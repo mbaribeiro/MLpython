@@ -3,24 +3,11 @@ import tensorflow as tf
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
+from math import *
+
 
 optimizer1 = tf.keras.optimizers.Adam(learning_rate=0.005)
 optimizer2 = tf.keras.optimizers.Adam(learning_rate=0.001)
-
-# Create the model
-modelTemp = tf.keras.Sequential([
-    tf.keras.layers.Dense(8, input_shape=(2,), activation="relu", bias_initializer='zeros'),
-    tf.keras.layers.Dense(64, activation="relu"),
-    tf.keras.layers.Dense(512, activation="relu"),
-    tf.keras.layers.Dense(4096, activation="relu"),
-    tf.keras.layers.Dense(40500, activation='linear')
-])
-
-modelVel = tf.keras.Sequential([
-    tf.keras.layers.Dense(64, input_shape=(2,), activation='relu'),
-    tf.keras.layers.Dense(1024, activation='relu'),
-    tf.keras.layers.Dense(40500, activation='linear')
-])
 
 
 class PrintEpochCallback(tf.keras.callbacks.Callback):
@@ -37,10 +24,6 @@ class PrintEpochCallback(tf.keras.callbacks.Callback):
             f"Epoch {epoch+1}/{self.params['epochs']}, loss: {logs['loss']:.4f}")
         plt.pause(0.01)
 
-
-# Compile the model
-modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
-modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
 
 fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
 
@@ -90,31 +73,60 @@ with open('./room/inputs/inputs.csv', 'r') as f:
     outputs1 = np.array(outputs1, dtype=float)
     outputs2 = np.array(outputs2, dtype=float)
 
-    # Convert the iputs to new scale of temperature
-    inputs[:, 0] = inputs[:, 0]
+    # Remove the columns with all zeros in both outputs
+    outputs1 = outputs1[:, ~np.all(outputs1 == 0, axis=0)]
+    outputs2 = outputs2[:, ~np.all(outputs2 == 0, axis=0)]
 
-    # Train the modelTemp
-    modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32,
-                  verbose=0, callbacks=[epoch_callback_temp])
+    print(outputs1.shape)
+    print(outputs2.shape)
 
-    # Train the modelVel
-    modelVel.fit(inputs, outputs2, epochs=500, batch_size=32,
-                 verbose=0, callbacks=[epoch_callback_vel])
+    # Create the model
+modelTemp = tf.keras.Sequential([
+    tf.keras.layers.Dense(
+        round(len(outputs1[0])/exp(4*len(inputs[0]))), input_shape=(len(inputs[0]),)),
+    tf.keras.layers.Dense(
+        round(len(outputs1[0])/exp(3*len(inputs[0]))), activation="relu"),
+    tf.keras.layers.Dense(
+        round(len(outputs1[0])/exp(2*len(inputs[0]))), activation="relu"),
+    tf.keras.layers.Dense(
+        round(len(outputs1[0])/exp(1*len(inputs[0]))), activation="relu"),
+    tf.keras.layers.Dense(len(outputs1[0]), activation='linear')
+])
 
-    # Test the model
-    predicted_inputs = [[15, 1], [18, 5], [20, 3]]
-    test_inputs = np.array(predicted_inputs)
-    predicted_outputsTemp = modelTemp.predict(test_inputs)
-    predicted_outputsVel = modelVel.predict(test_inputs)
+modelVel = tf.keras.Sequential([
+    tf.keras.layers.Dense(round(len(
+        outputs2[0])/exp(2*len(inputs[0]))), input_shape=(len(inputs[0]),), activation='relu'),
+    tf.keras.layers.Dense(
+        round(len(outputs2[0])/exp(1*len(inputs[0]))), activation='relu'),
+    tf.keras.layers.Dense(len(outputs2[0]), activation='linear')
+])
 
-    # Save predicted outputs
-    for i in range(len(predicted_inputs)):
-        inTemp, inVel = predicted_inputs[i]
-        with open(f'./room/predicteds/T{inTemp}V{inVel}.csv', 'w') as out_file:
-            out_file.write('i,j,k,temp,vel,count\n')
-            predicteds = '\n'.join([f"{a},{b},{c}" for a, b, c in zip(
-                coordenates, predicted_outputsTemp[i], predicted_outputsVel[i])]).replace('[', '').replace(']', '')
-            out_file.write(predicteds)
+# Compile the model
+modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
+modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
+
+# Train the modelTemp
+modelTemp.fit(inputs, outputs1, epochs=100, batch_size=32,
+              verbose=0, callbacks=[epoch_callback_temp])
+
+# Train the modelVel
+modelVel.fit(inputs, outputs2, epochs=100, batch_size=32,
+             verbose=0, callbacks=[epoch_callback_vel])
+
+# Test the model
+predicted_inputs = [[15, 1], [18, 5], [20, 3]]
+test_inputs = np.array(predicted_inputs)
+predicted_outputsTemp = modelTemp.predict(test_inputs)
+predicted_outputsVel = modelVel.predict(test_inputs)
+
+# Save predicted outputs
+for i in range(len(predicted_inputs)):
+    inTemp, inVel = predicted_inputs[i]
+    with open(f'./room/predicteds/T{inTemp}V{inVel}.csv', 'w') as out_file:
+        out_file.write('i,j,k,temp,vel,count\n')
+        predicteds = '\n'.join([f"{a},{b},{c}" for a, b, c in zip(
+            coordenates, predicted_outputsTemp[i], predicted_outputsVel[i])]).replace('[', '').replace(']', '')
+        out_file.write(predicteds)
 
 # Plot the predicted outputs and the real outputs
 for i in range(len(predicted_inputs)):
@@ -130,15 +142,13 @@ for i in range(len(predicted_inputs)):
     nonzero_indices = [i for i in range(
         len(output_list)) if output_list[i] != 0]
     output_list_filt = [output_list[i] for i in nonzero_indices]
-    predicted_outputsTemp_filt = [
-        predicted_outputsTemp[i][j] for j in nonzero_indices]
 
-    m, b = np.polyfit(output_list_filt, predicted_outputsTemp_filt, 1)
+    m, b = np.polyfit(output_list_filt, predicted_outputsTemp[i], 1)
     x = np.array(output_list_filt)
-    ax1.scatter(output_list_filt, predicted_outputsTemp_filt)
+    ax1.scatter(output_list_filt, predicted_outputsTemp[i])
     ax1.plot(x, m*x + b, color='red')
 
-    result = r2_score(output_list, predicted_outputsTemp[i])
+    result = r2_score(output_list_filt, predicted_outputsTemp[i])
     ax1.text(
         0.1, 0.9, "r-squared = {:.3f}".format(result), transform=ax1.transAxes)
 
@@ -149,24 +159,21 @@ for i in range(len(predicted_inputs)):
 
     # calculate the mse
     mse = tf.keras.losses.mean_squared_error(
-        output_list, predicted_outputsTemp[i])
+        output_list_filt, predicted_outputsTemp[i])
     print("MSE (Temperature) = " + str(mse))
 
     # Velocity
     output_list = df.iloc[:, 4].values.tolist()
 
-    nonzero_indices = [i for i in range(
-        len(output_list)) if output_list[i] != 0]
+    nonzero_indices = [i for i in range(len(output_list)) if output_list[i] != 0]
     output_list_filt = [output_list[i] for i in nonzero_indices]
-    predicted_outputsVel_filt = [
-        predicted_outputsVel[i][j] for j in nonzero_indices]
 
-    m, b = np.polyfit(output_list_filt, predicted_outputsVel_filt, 1)
+    m, b = np.polyfit(output_list_filt, predicted_outputsVel[i], 1)
     x = np.array(output_list_filt)
-    ax2.scatter(output_list_filt, predicted_outputsVel_filt)
+    ax2.scatter(output_list_filt, predicted_outputsVel[i])
     ax2.plot(x, m*x + b, color='red')
 
-    result = r2_score(output_list, predicted_outputsVel[i])
+    result = r2_score(output_list_filt, predicted_outputsVel[i])
     ax2.text(
         0.1, 0.9, "r-squared = {:.3f}".format(result), transform=ax2.transAxes)
 
@@ -177,7 +184,7 @@ for i in range(len(predicted_inputs)):
 
     # calculate the mse
     mse = tf.keras.losses.mean_squared_error(
-        output_list, predicted_outputsVel[i])
+        output_list_filt, predicted_outputsVel[i])
     print("MSE (Velocity) = " + str(mse))
 
     plt.show()
