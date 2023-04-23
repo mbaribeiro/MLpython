@@ -9,20 +9,15 @@ optimizer2 = tf.keras.optimizers.Adam(learning_rate=0.001)
 
 # Create the model
 modelTemp = tf.keras.Sequential([
-    tf.keras.layers.Dense(8, input_shape=(
-        2,), activation="relu", use_bias=True, bias_initializer='zeros'),
-    tf.keras.layers.Dense(64, activation="relu",
-                          use_bias=True, bias_initializer='zeros'),
-    tf.keras.layers.Dense(512, activation="relu",
-                          use_bias=True, bias_initializer='zeros'),
-    tf.keras.layers.Dense(4096, activation="relu",
-                          use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(8, input_shape=(2,), activation="relu", bias_initializer='zeros'),
+    tf.keras.layers.Dense(64, activation="relu"),
+    tf.keras.layers.Dense(512, activation="relu"),
+    tf.keras.layers.Dense(4096, activation="relu"),
     tf.keras.layers.Dense(40500, activation='linear')
 ])
 
 modelVel = tf.keras.Sequential([
-    tf.keras.layers.Dense(64, input_shape=(
-        2,), activation='relu', use_bias=True, bias_initializer='zeros'),
+    tf.keras.layers.Dense(64, input_shape=(2,), activation='relu'),
     tf.keras.layers.Dense(1024, activation='relu'),
     tf.keras.layers.Dense(40500, activation='linear')
 ])
@@ -95,12 +90,15 @@ with open('./room/inputs/inputs.csv', 'r') as f:
     outputs1 = np.array(outputs1, dtype=float)
     outputs2 = np.array(outputs2, dtype=float)
 
+    # Convert the iputs to new scale of temperature
+    inputs[:, 0] = inputs[:, 0]
+
     # Train the modelTemp
-    modelTemp.fit(inputs, outputs1, epochs=200, batch_size=32,
+    modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32,
                   verbose=0, callbacks=[epoch_callback_temp])
 
     # Train the modelVel
-    modelVel.fit(inputs, outputs2, epochs=50, batch_size=32,
+    modelVel.fit(inputs, outputs2, epochs=500, batch_size=32,
                  verbose=0, callbacks=[epoch_callback_vel])
 
     # Test the model
