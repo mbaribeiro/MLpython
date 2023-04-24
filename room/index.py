@@ -106,11 +106,11 @@ modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
 modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
 
 # Train the modelTemp
-modelTemp.fit(inputs, outputs1, epochs=100, batch_size=32,
+modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32,
               verbose=0, callbacks=[epoch_callback_temp])
 
 # Train the modelVel
-modelVel.fit(inputs, outputs2, epochs=100, batch_size=32,
+modelVel.fit(inputs, outputs2, epochs=500, batch_size=32,
              verbose=0, callbacks=[epoch_callback_vel])
 
 # Test the model
