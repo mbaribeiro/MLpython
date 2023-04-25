@@ -25,7 +25,7 @@ for filename in os.listdir(results_path):
         data = data.values
 
         # Change the value of 4th column to Celsius
-        data[:, 3] = data[:, 3] - 273.15
+        data[:, 3] = data[:, 3] - 288.15
 
         # Plot the data
         plt.show()
@@ -76,7 +76,7 @@ for filename in os.listdir(results_path):
         data = data.values
 
         # Change the value of 4th column to Celsius
-        data[:, 3] = data[:, 3] - 273.15
+        data[:, 3] = data[:, 3] - 288.15
 
         # Plot the data
         plt.show()

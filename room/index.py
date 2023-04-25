@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
 from math import *
 
-
 optimizer1 = tf.keras.optimizers.Adam(learning_rate=0.005)
 optimizer2 = tf.keras.optimizers.Adam(learning_rate=0.001)
 
@@ -46,6 +45,9 @@ with open('./room/inputs/inputs.csv', 'r') as file:
 # Separate input and output data
 inputs = data[:, :3]
 
+# Substract the temperature
+inputs[:, 0] = inputs[:, 0]  # - 15
+
 # Load input data
 with open('./room/inputs/inputs.csv', 'r') as f:
     # Skip the header
@@ -73,12 +75,13 @@ with open('./room/inputs/inputs.csv', 'r') as f:
     outputs1 = np.array(outputs1, dtype=float)
     outputs2 = np.array(outputs2, dtype=float)
 
+    # Remove the corresponding columns in coordinates that have all zeros in both outputs
+    coordenates = np.array(coordenates)
+    coordenates = coordenates[~np.all(outputs1 == 0, axis=0)]
+
     # Remove the columns with all zeros in both outputs
     outputs1 = outputs1[:, ~np.all(outputs1 == 0, axis=0)]
     outputs2 = outputs2[:, ~np.all(outputs2 == 0, axis=0)]
-
-    print(outputs1.shape)
-    print(outputs2.shape)
 
     # Create the model
 modelTemp = tf.keras.Sequential([
@@ -106,16 +109,17 @@ modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
 modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
 
 # Train the modelTemp
-modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32,
+modelTemp.fit(inputs, outputs1, epochs=1000, batch_size=32,
               verbose=0, callbacks=[epoch_callback_temp])
 
 # Train the modelVel
-modelVel.fit(inputs, outputs2, epochs=500, batch_size=32,
+modelVel.fit(inputs, outputs2, epochs=50, batch_size=32,
              verbose=0, callbacks=[epoch_callback_vel])
 
 # Test the model
 predicted_inputs = [[15, 1], [18, 5], [20, 3]]
 test_inputs = np.array(predicted_inputs)
+test_inputs[:, 0] = test_inputs[:, 0]  # - 15
 predicted_outputsTemp = modelTemp.predict(test_inputs)
 predicted_outputsVel = modelVel.predict(test_inputs)
 
@@ -165,7 +169,8 @@ for i in range(len(predicted_inputs)):
     # Velocity
     output_list = df.iloc[:, 4].values.tolist()
 
-    nonzero_indices = [i for i in range(len(output_list)) if output_list[i] != 0]
+    nonzero_indices = [i for i in range(
+        len(output_list)) if output_list[i] != 0]
     output_list_filt = [output_list[i] for i in nonzero_indices]
 
     m, b = np.polyfit(output_list_filt, predicted_outputsVel[i], 1)
