@@ -3,7 +3,6 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from Scripts import mediaTempVel as mtv
-from Scripts import data as dt
 
 # Define the room dimensions
 sala = [-1500, 1500, 1500, -3000, -750, 2250]
@@ -26,9 +25,6 @@ for filename in os.listdir(results_path):
 
         # Change the value of 4th column to Celsius
         data[:, 3] = data[:, 3] - 288.15
-
-        # Plot the data
-        plt.show()
 
         # Media Temp Velocity
         result = mtv.media_temp_vel(sala, n_cubes, data)

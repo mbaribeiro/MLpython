@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 from sklearn.metrics import r2_score
 from math import *
 
+# Define the parameters of the optimizer 
 optimizer1 = tf.keras.optimizers.Adam(learning_rate=0.005)
 optimizer2 = tf.keras.optimizers.Adam(learning_rate=0.001)
 
-
+# Define the Callback to print the epoch
 class PrintEpochCallback(tf.keras.callbacks.Callback):
     def __init__(self, ax):
         self.losses = []
@@ -22,7 +23,6 @@ class PrintEpochCallback(tf.keras.callbacks.Callback):
         self.ax.set_title(
             f"Epoch {epoch+1}/{self.params['epochs']}, loss: {logs['loss']:.4f}")
         plt.pause(0.01)
-
 
 fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
 
@@ -42,11 +42,11 @@ with open('./room/inputs/inputs.csv', 'r') as file:
     data = np.array(data)
     print("reading inputs.csv...")
 
-# Separate input and output data
+# Separate Temperature and Velocity data
 inputs = data[:, :3]
 
 # Substract the temperature
-inputs[:, 0] = inputs[:, 0]  # - 15
+inputs[:, 0] = inputs[:, 0] - 15
 
 # Load input data
 with open('./room/inputs/inputs.csv', 'r') as f:
@@ -109,17 +109,17 @@ modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
 modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
 
 # Train the modelTemp
-modelTemp.fit(inputs, outputs1, epochs=1000, batch_size=32,
+modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32,
               verbose=0, callbacks=[epoch_callback_temp])
 
 # Train the modelVel
-modelVel.fit(inputs, outputs2, epochs=50, batch_size=32,
+modelVel.fit(inputs, outputs2, epochs=100, batch_size=32,
              verbose=0, callbacks=[epoch_callback_vel])
 
 # Test the model
 predicted_inputs = [[15, 1], [18, 5], [20, 3]]
 test_inputs = np.array(predicted_inputs)
-test_inputs[:, 0] = test_inputs[:, 0]  # - 15
+test_inputs[:, 0] = test_inputs[:, 0]  - 15
 predicted_outputsTemp = modelTemp.predict(test_inputs)
 predicted_outputsVel = modelVel.predict(test_inputs)
 
