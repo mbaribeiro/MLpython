@@ -2,14 +2,18 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 import matplotlib.pyplot as plt
+import dataPlot as dt
 from sklearn.metrics import r2_score
 from math import *
 
-# Define the parameters of the optimizer 
+
+# Define the parameters of the optimizer
 optimizer1 = tf.keras.optimizers.Adam(learning_rate=0.005)
 optimizer2 = tf.keras.optimizers.Adam(learning_rate=0.001)
 
 # Define the Callback to print the epoch
+
+
 class PrintEpochCallback(tf.keras.callbacks.Callback):
     def __init__(self, ax):
         self.losses = []
@@ -23,6 +27,7 @@ class PrintEpochCallback(tf.keras.callbacks.Callback):
         self.ax.set_title(
             f"Epoch {epoch+1}/{self.params['epochs']}, loss: {logs['loss']:.4f}")
         plt.pause(0.01)
+
 
 fig, axs = plt.subplots(nrows=1, ncols=2, figsize=(10, 5))
 
@@ -119,7 +124,7 @@ modelVel.fit(inputs, outputs2, epochs=100, batch_size=32,
 # Test the model
 predicted_inputs = [[15, 1], [18, 5], [20, 3]]
 test_inputs = np.array(predicted_inputs)
-test_inputs[:, 0] = test_inputs[:, 0]  - 15
+test_inputs[:, 0] = test_inputs[:, 0] - 15
 predicted_outputsTemp = modelTemp.predict(test_inputs)
 predicted_outputsVel = modelVel.predict(test_inputs)
 
@@ -131,6 +136,62 @@ for i in range(len(predicted_inputs)):
         predicteds = '\n'.join([f"{a},{b},{c}" for a, b, c in zip(
             coordenates, predicted_outputsTemp[i], predicted_outputsVel[i])]).replace('[', '').replace(']', '')
         out_file.write(predicteds)
+    
+        output_file = f'./room/trainingOutputs/T{inTemp}V{inVel}.csv'
+        df = pd.read_csv(output_file, delimiter='\t')
+
+        #remove the lines in the output file that have all zeros in both outputs
+        df = df[~np.all(df.iloc[:, 3:5] == 0, axis=1)]
+    
+        # Plot the predicted outputs and the real outputs with scatter in 3d with temperature and velocity
+        fig = plt.figure()
+
+        # Criate a boolean mask to remove the points with temperature less than a number
+        mask = np.where(coordenates[:, 2] < 15)
+
+        # Define the minimum and maximum values for the colorbar
+        minTemp = min(min(predicted_outputsTemp[i]), min(df.iloc[:,3]))
+        maxTemp = max(max(predicted_outputsTemp[i]), max(df.iloc[:,3]))
+        minVel = min(min(predicted_outputsVel[i]), min(df.iloc[:,4]))
+        maxVel = max(max(predicted_outputsVel[i]), max(df.iloc[:,4]))
+
+        # First grath (Predicted Temp)
+        ax1 = fig.add_subplot(221, projection='3d')
+        surf = ax1.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=predicted_outputsTemp[i][mask], cmap='jet')
+        ax1.set_xlabel('X Label')
+        ax1.set_ylabel('Y Label')
+        ax1.set_zlabel('Z Label')
+        ax1.set_title('Predicted Temp')
+
+        # Second grath (Real Temp)
+        ax2 = fig.add_subplot(222, projection='3d')
+        c_array = np.array(df.iloc[:,3])
+        surf = ax2.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=c_array[mask], cmap='jet')
+        ax2.set_xlabel('X Label')
+        ax2.set_ylabel('Y Label')
+        ax2.set_zlabel('Z Label')
+        plt.colorbar(surf, ax=[ax1, ax2])
+        ax2.set_title('Real Temp')
+
+        # Third grath (Predicted Vel)
+        ax3 = fig.add_subplot(223, projection='3d')
+        surf = ax3.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=predicted_outputsVel[i][mask], cmap='jet')
+        ax3.set_xlabel('X Label')
+        ax3.set_ylabel('Y Label')
+        ax3.set_zlabel('Z Label')
+        ax3.set_title('Predicted Vel')
+
+        # Fourth grath (Real Vel)
+        ax4 = fig.add_subplot(224, projection='3d')
+        c_array = np.array(df.iloc[:,4])
+        surf = ax4.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=c_array[mask], cmap='jet')
+        ax4.set_xlabel('X Label')
+        ax4.set_ylabel('Y Label')
+        ax4.set_zlabel('Z Label')
+        plt.colorbar(surf, ax=[ax3, ax4])
+        ax4.set_title('Real Vel')
+
+        plt.show()
 
 # Plot the predicted outputs and the real outputs
 for i in range(len(predicted_inputs)):
@@ -193,3 +254,7 @@ for i in range(len(predicted_inputs)):
     print("MSE (Velocity) = " + str(mse))
 
     plt.show()
+
+# Save the models
+modelTemp.save('room/models/modelTemp.h5')
+modelVel.save('room/models/modelVel.h5')
