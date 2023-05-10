@@ -2,7 +2,6 @@ import numpy as np
 import tensorflow as tf
 import pandas as pd
 import matplotlib.pyplot as plt
-import dataPlot as dt
 from sklearn.metrics import r2_score
 from math import *
 
@@ -114,11 +113,11 @@ modelTemp.compile(loss='mean_squared_error', optimizer=optimizer1)
 modelVel.compile(loss='mean_squared_error', optimizer=optimizer2)
 
 # Train the modelTemp
-modelTemp.fit(inputs, outputs1, epochs=500, batch_size=32,
+modelTemp.fit(inputs, outputs1, epochs=1500, batch_size=32,
               verbose=0, callbacks=[epoch_callback_temp])
 
 # Train the modelVel
-modelVel.fit(inputs, outputs2, epochs=100, batch_size=32,
+modelVel.fit(inputs, outputs2, epochs=300, batch_size=32,
              verbose=0, callbacks=[epoch_callback_vel])
 
 # Test the model
@@ -136,37 +135,39 @@ for i in range(len(predicted_inputs)):
         predicteds = '\n'.join([f"{a},{b},{c}" for a, b, c in zip(
             coordenates, predicted_outputsTemp[i], predicted_outputsVel[i])]).replace('[', '').replace(']', '')
         out_file.write(predicteds)
-    
+
         output_file = f'./room/trainingOutputs/T{inTemp}V{inVel}.csv'
         df = pd.read_csv(output_file, delimiter='\t')
 
-        #remove the lines in the output file that have all zeros in both outputs
+        # remove the lines in the output file that have all zeros in both outputs
         df = df[~np.all(df.iloc[:, 3:5] == 0, axis=1)]
-    
+
         # Plot the predicted outputs and the real outputs with scatter in 3d with temperature and velocity
-        fig = plt.figure()
+        fig1 = plt.figure()
 
         # Criate a boolean mask to remove the points with temperature less than a number
         mask = np.where(coordenates[:, 2] < 15)
 
         # Define the minimum and maximum values for the colorbar
-        minTemp = min(min(predicted_outputsTemp[i]), min(df.iloc[:,3]))
-        maxTemp = max(max(predicted_outputsTemp[i]), max(df.iloc[:,3]))
-        minVel = min(min(predicted_outputsVel[i]), min(df.iloc[:,4]))
-        maxVel = max(max(predicted_outputsVel[i]), max(df.iloc[:,4]))
+        minTemp = min(min(predicted_outputsTemp[i]), min(df.iloc[:, 3]))
+        maxTemp = max(max(predicted_outputsTemp[i]), max(df.iloc[:, 3]))
+        minVel = min(min(predicted_outputsVel[i]), min(df.iloc[:, 4]))
+        maxVel = max(max(predicted_outputsVel[i]), max(df.iloc[:, 4]))
 
         # First grath (Predicted Temp)
-        ax1 = fig.add_subplot(221, projection='3d')
-        surf = ax1.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=predicted_outputsTemp[i][mask], cmap='jet')
+        ax1 = fig1.add_subplot(221, projection='3d')
+        surf = ax1.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask],
+                           coordenates[:, 1][mask], c=predicted_outputsTemp[i][mask], cmap='jet')
         ax1.set_xlabel('X Label')
         ax1.set_ylabel('Y Label')
         ax1.set_zlabel('Z Label')
         ax1.set_title('Predicted Temp')
 
         # Second grath (Real Temp)
-        ax2 = fig.add_subplot(222, projection='3d')
-        c_array = np.array(df.iloc[:,3])
-        surf = ax2.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=c_array[mask], cmap='jet')
+        ax2 = fig1.add_subplot(222, projection='3d')
+        c_array = np.array(df.iloc[:, 3])
+        surf = ax2.scatter(coordenates[:, 0][mask], coordenates[:, 2]
+                           [mask], coordenates[:, 1][mask], c=c_array[mask], cmap='jet')
         ax2.set_xlabel('X Label')
         ax2.set_ylabel('Y Label')
         ax2.set_zlabel('Z Label')
@@ -174,22 +175,90 @@ for i in range(len(predicted_inputs)):
         ax2.set_title('Real Temp')
 
         # Third grath (Predicted Vel)
-        ax3 = fig.add_subplot(223, projection='3d')
-        surf = ax3.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=predicted_outputsVel[i][mask], cmap='jet')
+        ax3 = fig1.add_subplot(223, projection='3d')
+        surf = ax3.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask],
+                           coordenates[:, 1][mask], c=predicted_outputsVel[i][mask], cmap='jet')
         ax3.set_xlabel('X Label')
         ax3.set_ylabel('Y Label')
         ax3.set_zlabel('Z Label')
         ax3.set_title('Predicted Vel')
 
         # Fourth grath (Real Vel)
-        ax4 = fig.add_subplot(224, projection='3d')
-        c_array = np.array(df.iloc[:,4])
-        surf = ax4.scatter(coordenates[:, 0][mask], coordenates[:, 2][mask], coordenates[:, 1][mask], c=c_array[mask], cmap='jet')
+        ax4 = fig1.add_subplot(224, projection='3d')
+        c_array = np.array(df.iloc[:, 4])
+        surf = ax4.scatter(coordenates[:, 0][mask], coordenates[:, 2]
+                           [mask], coordenates[:, 1][mask], c=c_array[mask], cmap='jet')
         ax4.set_xlabel('X Label')
         ax4.set_ylabel('Y Label')
         ax4.set_zlabel('Z Label')
         plt.colorbar(surf, ax=[ax3, ax4])
         ax4.set_title('Real Vel')
+
+        # Plot the error between the predicted outputs and the real outputs
+        fig2 = plt.figure()
+
+        ax5 = fig2.add_subplot(121, projection='3d')
+        c_array = np.array(df.iloc[:, 3])
+        c = predicted_outputsTemp[i][mask]
+        diff1 = abs(c_array[mask] - c)
+        surf = ax5.scatter(coordenates[:, 0][mask], coordenates[:, 2]
+                           [mask], coordenates[:, 1][mask], c=diff1, cmap='jet')
+        ax5.set_xlabel('X Label')
+        ax5.set_ylabel('Y Label')
+        ax5.set_zlabel('Z Label')
+        plt.colorbar(surf, ax=ax5)
+        ax5.set_title('Error Temp')
+
+        ax6 = fig2.add_subplot(122,  projection='3d')
+        c_array = np.array(df.iloc[:, 4])
+        c = predicted_outputsVel[i][mask]
+        diff2 = abs(c_array[mask] - c)
+        surf = ax6.scatter(coordenates[:, 0][mask], coordenates[:, 2]
+                           [mask], coordenates[:, 1][mask], c=diff2, cmap='jet')
+        ax6.set_xlabel('X Label')
+        ax6.set_ylabel('Y Label')
+        ax6.set_zlabel('Z Label')
+        plt.colorbar(surf, ax=ax6)
+        ax6.set_title('Error Vel')
+
+        # Plot only the 5% of the points with the highest error
+        fig3 = plt.figure()
+
+        ax7 = fig3.add_subplot(121, projection='3d')
+        c_array = np.array(df.iloc[:, 3])
+        c = predicted_outputsTemp[i][mask]
+        diff1 = abs(c_array[mask] - c)
+        diff1 = np.array(diff1)
+        diff1 = diff1.flatten()
+        diff1.sort()
+        diff1 = diff1[::-1]
+        diff1 = diff1[:int(len(diff1)*0.05)]
+        mask2 = np.isin(abs(c_array[mask] - c), diff1)
+        surf = ax7.scatter(coordenates[:, 0][mask][mask2], coordenates[:, 2]
+                           [mask][mask2], coordenates[:, 1][mask][mask2], c=diff1, cmap='jet')
+        ax7.set_xlabel('X Label')
+        ax7.set_ylabel('Y Label')
+        ax7.set_zlabel('Z Label')
+        plt.colorbar(surf, ax=ax7)
+        ax7.set_title('Error Temp')
+
+        ax8 = fig3.add_subplot(122,  projection='3d')
+        c_array = np.array(df.iloc[:, 4])
+        c = predicted_outputsVel[i][mask]
+        diff2 = abs(c_array[mask] - c)
+        diff2 = np.array(diff2)
+        diff2 = diff2.flatten()
+        diff2.sort()
+        diff2 = diff2[::-1]
+        diff2 = diff2[:int(len(diff2)*0.05)]
+        mask2 = np.isin(abs(c_array[mask] - c), diff2)
+        surf = ax8.scatter(coordenates[:, 0][mask][mask2], coordenates[:, 2]
+                           [mask][mask2], coordenates[:, 1][mask][mask2], c=diff2, cmap='jet')
+        ax8.set_xlabel('X Label')
+        ax8.set_ylabel('Y Label')
+        ax8.set_zlabel('Z Label')
+        plt.colorbar(surf, ax=ax8)
+        ax8.set_title('Error Vel')
 
         plt.show()
 
